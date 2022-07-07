@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\Interface\TaskInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,14 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class TaskController extends AbstractController
 {
-    private EntityManagerInterface $em;
+    private TaskInterface $iTask;
 
-    private TaskRepository $taskRepository;
-
-    public function __construct(EntityManagerInterface $em, TaskRepository $taskRepository)
+    public function __construct(TaskInterface $iTask)
     {
-        $this->em = $em;
-        $this->taskRepository = $taskRepository;
+        $this->iTask = $iTask;
     }
 
     /**
@@ -34,8 +32,10 @@ class TaskController extends AbstractController
      */
     public function listAction(): Response
     {
+        $tasks = $this->iTask->taskList($this->getUser());
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->taskRepository->getTasks($this->getUser()),
+            'tasks' => $tasks,
             'status' => ""
         ]);
     }
@@ -53,10 +53,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task->setUser($this->getUser());
-
-            $this->em->persist($task);
-            $this->em->flush();
+            $this->iTask->taskCreate($task, $this->getUser());
 
             $this->addFlash('success', 'La tâche a été bien ajoutée.');
 
@@ -80,7 +77,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $task = $this->iTask->taskEdit($task);
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -102,8 +99,7 @@ class TaskController extends AbstractController
      */
     public function toggleTaskAction(Task $task): Response
     {
-        $task->toggle(!$task->isDone());
-        $this->em->flush();
+        $task = $this->iTask->toggleTaskAction($task);
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -117,8 +113,10 @@ class TaskController extends AbstractController
      */
     public function tasksDone(): Response
     {
+        $tasksDone = $this->iTask->tasksDone($this->getUser());
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->taskRepository->getTasksDone($this->getUser()),
+            'tasks' => $tasksDone,
             'status' => "faites"
         ]);
     }
@@ -132,8 +130,7 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): Response
     {
-        $this->em->remove($task);
-        $this->em->flush();
+        $this->iTask->taskDelete($task);
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
