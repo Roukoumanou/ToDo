@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TaskRepository;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,6 +41,11 @@ class Task
      */
     private $isDone;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -51,7 +57,7 @@ class Task
         return $this->id;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -59,9 +65,10 @@ class Task
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -69,16 +76,18 @@ class Task
     public function setTitle($title)
     {
         $this->title = $title;
+        return $this;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setContent($content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
+        return $this;
     }
 
     public function isDone()
@@ -89,5 +98,17 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
@@ -23,21 +24,26 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users", name="user_list")
+     * @Route("/users", name="user_list", methods={"GET"})
+     *
+     * @param UserRepository $userRepository
+     * @return Response
      */
-    public function listAction(UserRepository $userRepository)
+    public function listAction(UserRepository $userRepository): Response
     {
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
     /**
      * @Route("/users/create", name="user_create", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,12 +62,15 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="user_edit", methods={"GET", "POST"})
+     *
+     * @param User $user
+     * @param Request $request
+     * @return Response
      */
-    public function editAction(User $user, Request $request)
+    public function editAction(User $user, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

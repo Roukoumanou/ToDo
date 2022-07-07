@@ -17,4 +17,22 @@ class TaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Task::class);
     }
+
+    public function getTasks(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.isDone = false')
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTasksDone(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.isDone = true')
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -12,9 +13,9 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login", methods={"GET", "POST"})
      *
      * @param AuthenticationUtils $authenticationUtils
-     * @return void
+     * @return Response
      */
-    public function loginAction(AuthenticationUtils $authenticationUtils)
+    public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
