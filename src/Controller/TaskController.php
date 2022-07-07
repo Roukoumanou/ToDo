@@ -7,10 +7,14 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("/users")
+ */
 class TaskController extends AbstractController
 {
     private EntityManagerInterface $em;
@@ -31,7 +35,7 @@ class TaskController extends AbstractController
     public function listAction(): Response
     {
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->taskRepository->getTasks(),
+            'tasks' => $this->taskRepository->getTasks($this->getUser()),
             'status' => ""
         ]);
     }
@@ -64,6 +68,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER') and user === task.getUser()")
      *
      * @param Task $task
      * @param Request $request
@@ -90,6 +95,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle", methods={"GET"})
+     * @Security("is_granted('ROLE_USER') and user === task.getUser()")
      *
      * @param Task $task
      * @return Response
@@ -112,13 +118,14 @@ class TaskController extends AbstractController
     public function tasksDone(): Response
     {
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->taskRepository->getTasksDone(),
+            'tasks' => $this->taskRepository->getTasksDone($this->getUser()),
             'status' => "faites"
         ]);
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Security("is_granted('ROLE_USER') and user === task.getUser()")
      *
      * @param Task $task
      * @return Response
