@@ -9,35 +9,47 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends AbstractController
 {
     private EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em)
+    private TaskRepository $taskRepository;
+
+    public function __construct(EntityManagerInterface $em, TaskRepository $taskRepository)
     {
         $this->em = $em;
+        $this->taskRepository = $taskRepository;
     }
 
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks", name="task_list", methods={"GET"})
+     *
+     * @return Response
      */
-    public function listAction(TaskRepository $taskRepository)
+    public function listAction(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        return $this->render('task/list.html.twig', [
+            'tasks' => $this->taskRepository->getTasks(),
+            'status' => ""
+        ]);
     }
 
     /**
-     * @Route("/tasks/create", name="task_create")
+     * @Route("/tasks/create", name="task_create", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $task->setUser($this->getUser());
 
             $this->em->persist($task);
             $this->em->flush();
@@ -51,12 +63,15 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Route("/tasks/{id}/edit", name="task_edit", methods={"GET", "POST"})
+     *
+     * @param Task $task
+     * @param Request $request
+     * @return Response
      */
-    public function editAction(Task $task, Request $request)
+    public function editAction(Task $task, Request $request): Response
     {
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -74,9 +89,12 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @Route("/tasks/{id}/toggle", name="task_toggle", methods={"GET"})
+     *
+     * @param Task $task
+     * @return Response
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task): Response
     {
         $task->toggle(!$task->isDone());
         $this->em->flush();
@@ -87,9 +105,25 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Route("/tasks-done", name="tasks_done", methods={"GET"})
+     *
+     * @return Response
      */
-    public function deleteTaskAction(Task $task)
+    public function tasksDone(): Response
+    {
+        return $this->render('task/list.html.twig', [
+            'tasks' => $this->taskRepository->getTasksDone(),
+            'status' => "faites"
+        ]);
+    }
+
+    /**
+     * @Route("/tasks/{id}/delete", name="task_delete")
+     *
+     * @param Task $task
+     * @return Response
+     */
+    public function deleteTaskAction(Task $task): Response
     {
         $this->em->remove($task);
         $this->em->flush();
