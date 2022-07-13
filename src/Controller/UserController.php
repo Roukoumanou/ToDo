@@ -4,37 +4,34 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Interface\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @Route("/admin")
  */
 class UserController extends AbstractController
 {
-    private EntityManagerInterface $em;
-    private UserPasswordHasherInterface $hasher;
+    private UserInterface $iUser;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $hasher)
+    public function __construct(UserInterface $iUser)
     {
-        $this->em = $em;
-        $this->hasher = $hasher;
+        $this->iUser = $iUser;
     }
 
     /**
      * @Route("/users", name="user_list", methods={"GET"})
      *
-     * @param UserRepository $userRepository
      * @return Response
      */
-    public function listAction(UserRepository $userRepository): Response
+    public function listAction(): Response
     {
-        return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
+        $users = $this->iUser->listUser();
+
+        return $this->render('user/list.html.twig', ['users' => $users]);
     }
 
     /**
@@ -50,11 +47,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->hasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
-
-            $this->em->persist($user);
-            $this->em->flush();
+            $this->iUser->createUser($user);
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
@@ -77,10 +70,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->hasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
-
-            $this->em->flush();
+            $this->iUser->userEdit($user);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 

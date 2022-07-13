@@ -28,24 +28,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
-    private $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank(message="Vous devez saisir ce champs.")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
@@ -57,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tasks = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -72,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return (string) $this->username;
     }
@@ -80,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -96,33 +98,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->password;
     }
 
-    public function setPassword($password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return (string) $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
+
         return $this;
     }
 
     public function getRoles(): array
     {
-        return array_unique($this->roles);
+        $roles = $this->roles;
+
+        return array_unique($roles);
     }
 
     public function eraseCredentials()
     {
     }
 
-    public function setRoles(?array $roles): self
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
