@@ -22,29 +22,29 @@ class Task
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $createdAt;
+    private \DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Vous devez saisir un titre.")
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Vous devez saisir du contenu.")
      */
-    private $content;
+    private string $content;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDone;
+    private bool $isDone;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
      */
-    private $user;
+    private ?User $user;
 
     public function __construct()
     {
@@ -72,6 +72,7 @@ class Task
     public function setCreatedAt(\DateTimeInterface $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -80,7 +81,7 @@ class Task
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -97,7 +98,7 @@ class Task
         return $this;
     }
 
-    public function isDone()
+    public function isDone(): bool
     {
         return $this->isDone;
     }
