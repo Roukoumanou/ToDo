@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\Interface\UserInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,9 +28,14 @@ class UserController extends AbstractController
      *
      * @return Response
      */
-    public function listAction(): Response
+    public function listAction(Request $request, PaginatorInterface $paginator): Response
     {
-        $users = $this->iUser->listUser();
+
+        $users = $paginator->paginate(
+            $this->iUser->listUser(),
+            $request->query->getInt('page', 1),
+            5
+        );
 
         return $this->render('user/list.html.twig', ['users' => $users]);
     }
