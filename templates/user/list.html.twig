@@ -24,7 +24,7 @@
                     <tbody>
                     {% for user in users %}
                         <tr>
-                            <th scope="row">{{ loop.index }}</th>
+                            <th scope="row">{{ user.id }}</th>
                             <td>{{ user.username }}</td>
                             <td>{{ user.email }}</td>
                             <td>
@@ -36,5 +36,9 @@
                 </table>
             </div>
         {% endif %}
+
+        <div class="navigation mt-4">
+            {{ knp_pagination_render(users) }}
+        </div>
     </div>
 {% endblock %}

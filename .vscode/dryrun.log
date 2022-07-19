@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/roukoumanou/Sites/ToDo'
+egrep '^[a-zA-Z_-]+:.*?## .*$'  Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $1, $2}'
+make: Leaving directory '/home/roukoumanou/Sites/ToDo'
+ 

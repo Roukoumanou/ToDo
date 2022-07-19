@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Service\Interface\TaskInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class TaskController extends AbstractController
 {
-    private TaskInterface $iTask;
-
-    public function __construct(TaskInterface $iTask)
+    public function __construct(private TaskInterface $iTask, private PaginatorInterface $paginator)
     {
         $this->iTask = $iTask;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -28,9 +28,13 @@ class TaskController extends AbstractController
      *
      * @return Response
      */
-    public function listAction(): Response
+    public function listAction(Request $request): Response
     {
-        $tasks = $this->iTask->taskList($this->getUser());
+        $tasks = $this->paginator->paginate(
+            $this->iTask->taskList($this->getUser()),
+            $request->query->getInt('page', 1),
+            12
+        );
 
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
@@ -109,9 +113,13 @@ class TaskController extends AbstractController
      *
      * @return Response
      */
-    public function tasksDone(): Response
+    public function tasksDone(Request $request): Response
     {
-        $tasksDone = $this->iTask->tasksDone($this->getUser());
+        $tasksDone = $this->paginator->paginate(
+            $this->iTask->tasksDone($this->getUser()),
+            $request->query->getInt('page', 1),
+            12
+        );
 
         return $this->render('task/list.html.twig', [
             'tasks' => $tasksDone,

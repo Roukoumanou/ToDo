@@ -21,4 +21,4 @@ Please indicate at the beginning of the title: **`[feature]`**.
 - Please indicate at the beginning of the title: **`[bug]`**.
 
 
-> Thank's ! 🙌
+> Thank's !
