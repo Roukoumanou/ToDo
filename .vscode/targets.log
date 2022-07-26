@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jul 19 00:58:22 2022
+# Make data base, printed on Tue Jul 26 01:16:05 2022
 
 # Variables
 
@@ -47,7 +49,7 @@ SNAP_DATA = /var/snap/code/102
 # environment
 VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"8e1a08857df44efaeace20a1f4372f40.fr","_translationsConfigFile":"/home/roukoumanou/.config/Code/clp/8e1a08857df44efaeace20a1f4372f40.fr/tcf.json","_cacheRoot":"/home/roukoumanou/.config/Code/clp/8e1a08857df44efaeace20a1f4372f40.fr","_resolvedLanguagePackCoreLocation":"/home/roukoumanou/.config/Code/clp/8e1a08857df44efaeace20a1f4372f40.fr/3b889b090b5ad5793f524b5d1d39fda662b96a2a","_corruptedFile":"/home/roukoumanou/.config/Code/clp/8e1a08857df44efaeace20a1f4372f40.fr/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:55067
+JOURNAL_STREAM = 8:57172
 # makefile (from 'Makefile', line 5)
 SYMFONY_CONSOLE = php bin/console
 # environment
@@ -71,7 +73,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 _ = /snap/code/102/usr/share/code/code
 # environment
-MANAGERPID = 2363
+MANAGERPID = 2718
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -85,7 +87,7 @@ PATH = /home/roukoumanou/.platformsh/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/roukoumanou-BOHK-WAX9X:@/tmp/.ICE-unix/2618,unix/roukoumanou-BOHK-WAX9X:/tmp/.ICE-unix/2618
+SESSION_MANAGER = local/roukoumanou-BOHK-WAX9X:@/tmp/.ICE-unix/2965,unix/roukoumanou-BOHK-WAX9X:/tmp/.ICE-unix/2965
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -101,7 +103,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = b980a45e050a49448274ffead30ce3ae
+INVOCATION_ID = e878b08e523549a78707ddcbe284f9ea
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/102/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -113,7 +115,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 10547
+GIO_LAUNCHED_DESKTOP_FILE_PID = 17783
 # automatic
 %F = $(notdir $%)
 # environment
@@ -125,7 +127,7 @@ PWD = /home/roukoumanou/Sites/ToDo
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2551
+SSH_AGENT_PID = 2905
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -161,6 +163,7 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # environment
 MAKELEVEL := 0
 # environment
+ 
 SNAP_REAL_HOME = /home/roukoumanou
 # default
 MAKE = $(MAKE_COMMAND)
@@ -245,7 +248,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 10600
+VSCODE_PID = 17835
 # variable set hash-table stats:
 # Load=118/1024=12%, Rehash=0, Collisions=17/143=12%
 
@@ -271,6 +274,7 @@ dbt:
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 16):
 	$(SYMFONY_CONSOLE) doctrine:database:drop --env=test --force
+ 
 	$(SYMFONY_CONSOLE) doctrine:database:create --env=test
 	$(SYMFONY_CONSOLE) doctrine:schema:create --env=test
 
@@ -284,9 +288,6 @@ b:
 
 h:
 #  Phony target (prerequisite of .PHONY).
- 
-make: *** No rule to make target 'all'.  Stop.
-
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
@@ -346,6 +347,7 @@ tu:
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 22):
 	$(PHPUNIT) tests/Entity/
+ 
 
 # files hash-table stats:
 # Load=12/1024=1%, Rehash=0, Collisions=0/26=0%
@@ -361,6 +363,6 @@ tu:
 # strcache performance: lookups = 63 / hit rate = 23%
 # hash-table stats:
 # Load=48/8192=1%, Rehash=0, Collisions=1/63=2%
-# Finished Make data base on Tue Jul 19 00:58:22 2022
+# Finished Make data base on Tue Jul 26 01:16:05 2022
 
  
