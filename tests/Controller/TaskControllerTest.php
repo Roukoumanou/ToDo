@@ -5,16 +5,16 @@ use App\Tests\Utils\CustomWebTestCase;
 
 class TaskControllerTest extends CustomWebTestCase
 {
-    public function testTaskListNotAuthorizedForAdmin()
+    public function testTaskListAuthorizedForAdmin()
     {
         $this->adminValidConnection();
         $this->client->request('GET', '/users/tasks');
-        $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(200);
     }
 
     public function testTaskListNotAuthorized()
     {
-        $crawler = $this->client->request('GET', '/users/tasks');
+        $this->client->request('GET', '/users/tasks');
         $this->assertResponseRedirects();
     }
 
