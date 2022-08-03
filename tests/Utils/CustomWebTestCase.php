@@ -35,7 +35,7 @@ class CustomWebTestCase extends WebTestCase
     {
         $this->client->request('GET', '/login');
         $this->client->submitForm('Se connecter', [
-            '_username' => 'roukoumanouamidou@gmail.com',
+            '_username' => 'admin@gmail.com',
             '_password' => 'password',
         ]);
     }
