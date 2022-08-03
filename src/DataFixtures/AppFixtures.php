@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
             $task = new Task();
                 $task->setTitle('Tâche N°'.$i)
                     ->setContent('Ceci est le contenu de la tâche N°'.$i)
-                    ->setUser($user)
+                    ->setUser($admin)
                     ->setCreatedAt(new \DateTime());
 
             $manager->persist($task);
